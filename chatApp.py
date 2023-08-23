@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
 # Retrieve the room files path from environment variable
-#room_files_path = os.getenv('ROOM_FILES_PATH')
+room_files_path = os.getenv('ROOM_FILES_PATH')
 room_files_path = "rooms/"
 
 # Helper functions for user authentication
@@ -47,8 +47,6 @@ def register():
         encoded_password = encode_password(password)
         
         # Save user details to the CSV file
-        with open('readme.txt', 'w') as f:
-            f.write('Create a new text file!')
         with open('users.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([username, encoded_password])
@@ -82,10 +80,14 @@ def lobby():
     if 'username' in session:
         if request.method == 'POST':
             room_name = request.form['new_room']
-            #todo:create room.txt
+            try:
+                with open('rooms/'+ room_name, 'x') as f:
+                    f.write('Create a new text file!')
+            except FileNotFoundError:
+                print("The given room name already exists")
             print("CREATED NEW ROOM NAMED: " + room_name )
-
-        return render_template('lobby.html')  
+        rooms = os.listdir('rooms/')
+        return render_template('lobby.html', rooms=rooms)  
     else:
         return redirect('/login')
 
@@ -93,9 +95,9 @@ def lobby():
 @app.route('/chat/<room>', methods=['GET', 'POST'])
 def chat(room):
     if 'username' in session:
-        if request.method == 'POST':
-            message = request.form['msg']
-            print("MESSAGE RECEIVED IN CHAT " + message )
+        # if request.method == 'POST':
+        #     message = request.form['msg']
+        #     print("MESSAGE RECEIVED IN CHAT " + message )
         return render_template('chat.html', room=room)
     else:
         return redirect('/login')
@@ -103,13 +105,19 @@ def chat(room):
 
 @app.route('/api/chat/<room>', methods=['POST'])
 def update_chat(room):
-    message = request.json['message']
+    print("in api!!!!!!!!!!!")
+    message = request.form['msg']
+    print("message: " + message)
     username = session['username']
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("username: " + username)
     
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f'[{timestamp}] {username}: {message}\n')
+
     # Append the message to the room's unique .txt file
-    with open(f'{room_files_path}/{room}.txt', 'a') as file:
-        file.write(f'[{timestamp}] {username}: {message}\n')
+    with open('users.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(f'[{timestamp}] {username}: {message}\n')
     
     return jsonify({'status': 'success'})
 
