@@ -14,6 +14,7 @@
         return "/api/chat/"+room;
       }
   
+      
       function updateChat() {
         $.get(room(), function(data) {
           $("#chatbox").text(data);
