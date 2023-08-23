@@ -2,13 +2,20 @@ from flask import Flask, render_template, request, redirect, session, jsonify
 import csv
 import os
 import base64
+from flask_session import Session
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+sessions = {}
+
 
 # Retrieve the room files path from environment variable
-#room_files_path = os.getenv('ROOM_FILES_PATH')
+room_files_path = os.getenv('ROOM_FILES_PATH')
 room_files_path = "rooms/"
 
 # Helper functions for user authentication
@@ -47,8 +54,6 @@ def register():
         encoded_password = encode_password(password)
         
         # Save user details to the CSV file
-        with open('readme.txt', 'w') as f:
-            f.write('Create a new text file!')
         with open('users.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([username, encoded_password])
@@ -64,7 +69,7 @@ def login():
         password = request.form['password']
         
         if check_user_credentials(username, password):
-            session['username'] = username
+            sessions[username] = username
             return redirect('/lobby')
         else:
             return "Invalid credentials. Please try again."
@@ -82,10 +87,14 @@ def lobby():
     if 'username' in session:
         if request.method == 'POST':
             room_name = request.form['new_room']
-            #todo:create room.txt
+            try:
+                with open(f'rooms/{room_name}.txt', 'x') as f:
+                    f.write('Welcome! \n')
+            except FileNotFoundError:
+                print("The given room name already exists")
             print("CREATED NEW ROOM NAMED: " + room_name )
-
-        return render_template('lobby.html')  
+        rooms = os.listdir('rooms/')
+        return render_template('lobby.html', rooms=rooms)  
     else:
         return redirect('/login')
 
@@ -93,25 +102,25 @@ def lobby():
 @app.route('/chat/<room>', methods=['GET', 'POST'])
 def chat(room):
     if 'username' in session:
-        if request.method == 'POST':
-            message = request.form['msg']
-            print("MESSAGE RECEIVED IN CHAT " + message )
         return render_template('chat.html', room=room)
     else:
         return redirect('/login')
 
 
-@app.route('/api/chat/<room>', methods=['POST'])
+@app.route('/api/chat/<room>', methods=['GET','POST'])
 def update_chat(room):
-    message = request.json['message']
-    username = session['username']
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Append the message to the room's unique .txt file
-    with open(f'{room_files_path}/{room}.txt', 'a') as file:
-        file.write(f'[{timestamp}] {username}: {message}\n')
-    
-    return jsonify({'status': 'success'})
+    if request.method == 'POST':
+        message = request.form['msg']
+        username = sessions[username]
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Append the message to the room's unique .txt file
+        with open(f'rooms/{room}', 'a', newline='') as file:
+            file.write(f'[{timestamp}] {username}: {message}\n')
+            
+    with open(f'rooms/{room}', 'r' ) as file:
+        file.seek(0)
+        lines = file.read()
+    return lines
 
 
 if __name__ == '__main__':

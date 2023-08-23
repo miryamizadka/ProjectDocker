@@ -19,10 +19,10 @@
     </form>
 
     <h3>Enter a chat room:</h3>
-    <form action="chat" method="POST" id="chat-form">
+    <form method="POST" id="chat-form">
         <label for="room">Room name:</label><br>
         <select name="room" id="room">
-            {% for room in ['room1', 'room2'] %}
+            {% for room in rooms %}
             <option value="{{ room }}">{{ room }}</option>
             {% endfor %}
         </select>

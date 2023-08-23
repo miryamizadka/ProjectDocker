@@ -14,6 +14,7 @@
         return "/api/chat/"+room;
       }
   
+      
       function updateChat() {
         $.get(room(), function(data) {
           $("#chatbox").text(data);
@@ -39,7 +40,7 @@
         Message:<input name="msg" type=text>
         <input id="sendBtn" type="button" value="send">
       </form>
-      <pre id="chatbox">Loading...</pre>0.
+      <pre id="chatbox">Loading...</pre>
       
       <br>
       <br>
