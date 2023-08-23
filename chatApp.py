@@ -86,12 +86,12 @@ def lobby():
         if request.method == 'POST':
             room_name = request.form['new_room']
             try:
-                with open(f'rooms/{room_name}.txt', 'x') as f:
+                with open(f'{room_files_path}{room_name}.txt', 'x') as f:
                     f.write('Welcome! \n')
             except FileNotFoundError:
                 print("The given room name already exists")
             print("CREATED NEW ROOM NAMED: " + room_name )
-        rooms = os.listdir('rooms/')
+        rooms = os.listdir(f'{room_files_path}')
         new_rooms = [x[:-4] for x in rooms]
         return render_template('lobby.html', rooms=new_rooms)  
     else:
@@ -113,10 +113,10 @@ def update_chat(room):
         username = session['username']
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # Append the message to the room's unique .txt file
-        with open(f'rooms/{room}.txt', 'a', newline='') as file:
+        with open(f'{room_files_path}{room}.txt', 'a', newline='') as file:
             file.write(f'[{timestamp}] {username}: {message}\n')
             
-    with open(f'rooms/{room}.txt', 'r' ) as file:
+    with open(f'{room_files_path}{room}.txt', 'r' ) as file:
         file.seek(0)
         lines = file.read()
     return lines
