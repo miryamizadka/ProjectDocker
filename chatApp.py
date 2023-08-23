@@ -2,15 +2,13 @@ from flask import Flask, render_template, request, redirect, session, jsonify
 import csv
 import os
 import base64
-from flask_session import Session
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
-
+g
 sessions = {}
 
 
@@ -94,7 +92,8 @@ def lobby():
                 print("The given room name already exists")
             print("CREATED NEW ROOM NAMED: " + room_name )
         rooms = os.listdir('rooms/')
-        return render_template('lobby.html', rooms=rooms)  
+        new_rooms = [x[:-4] for x in rooms]
+        return render_template('lobby.html', rooms=new_rooms)  
     else:
         return redirect('/login')
 

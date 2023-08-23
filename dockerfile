@@ -9,7 +9,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install the required packages
-RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
+RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt 
 
 COPY . .
 
