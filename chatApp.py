@@ -2,16 +2,12 @@ from flask import Flask, render_template, request, redirect, session, jsonify
 import csv
 import os
 import base64
-from flask_session import Session
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
-
-sessions = {}
 
 
 # Retrieve the room files path from environment variable
@@ -69,7 +65,7 @@ def login():
         password = request.form['password']
         
         if check_user_credentials(username, password):
-            sessions[username] = username
+            session['username'] = username
             return redirect('/lobby')
         else:
             return "Invalid credentials. Please try again."
@@ -111,7 +107,7 @@ def chat(room):
 def update_chat(room):
     if request.method == 'POST':
         message = request.form['msg']
-        username = sessions[username]
+        username = session['username']
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # Append the message to the room's unique .txt file
         with open(f'rooms/{room}', 'a', newline='') as file:
