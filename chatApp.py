@@ -10,6 +10,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
 
+
 # Retrieve the room files path from environment variable
 room_files_path = os.getenv('ROOM_FILES_PATH')
 room_files_path = "rooms/"
@@ -90,7 +91,8 @@ def lobby():
                 print("The given room name already exists")
             print("CREATED NEW ROOM NAMED: " + room_name )
         rooms = os.listdir('rooms/')
-        return render_template('lobby.html', rooms=rooms)  
+        new_rooms = [x[:-4] for x in rooms]
+        return render_template('lobby.html', rooms=new_rooms)  
     else:
         return redirect('/login')
 
@@ -120,4 +122,4 @@ def update_chat(room):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)

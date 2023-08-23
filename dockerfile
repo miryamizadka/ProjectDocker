@@ -1,5 +1,6 @@
 # Use a base Python image
 FROM python:3.9
+RUN update-ca-certificates
 
 # Set the working directory in the container
 WORKDIR /app
@@ -8,10 +9,9 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install the required packages
-RUN pip install -r requirements.txt
+RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt 
 
-# Copy the chatApp.py file to the container
-COPY chatApp.py .
+COPY . .
 
 # Expose the port on which the Flask app will run
 EXPOSE 5000
