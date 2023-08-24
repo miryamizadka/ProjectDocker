@@ -13,7 +13,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 # Retrieve the room files path from environment variable
 room_files_path = os.getenv('ROOM_FILES_PATH')
-room_files_path = "rooms/"
+#room_files_path = "rooms/"
 
 # Helper functions for user authentication
 def encode_password(password):

@@ -1,5 +1,6 @@
 # Use a base Python image
 FROM python:3.9
+VOLUME [ "/users.csv" ]
 RUN update-ca-certificates
 
 # Set the working directory in the container
