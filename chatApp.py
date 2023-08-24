@@ -114,10 +114,10 @@ def update_chat(room):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Append the message to the room's unique .txt file
-        with open(f'rooms/{room}', 'a', newline='') as file:
+        with open(f'rooms/{room}.txt', 'a', newline='') as file:
             file.write(f'[{timestamp}] {username}: {message}\n')
             
-    with open(f'rooms/{room}', 'r' ) as file:
+    with open(f'rooms/{room}.txt', 'r' ) as file:
         file.seek(0)
         messages = file.read()
     
