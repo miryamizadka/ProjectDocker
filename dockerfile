@@ -15,7 +15,7 @@ COPY . .
 
 # Expose the port on which the Flask app will run
 EXPOSE 5000
-
+ENV room_files_path = "rooms/"
 # Set the environment variable for room files path
 ENV ROOM_FILES_PATH /app/room_files
 

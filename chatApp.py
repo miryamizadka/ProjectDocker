@@ -13,6 +13,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 # Retrieve the room files path from environment variable
 room_files_path = os.getenv('ROOM_FILES_PATH')
+room_files_path = "rooms/"
 
 # Helper functions for user authentication
 def encode_password(password):
@@ -83,16 +84,15 @@ def lobby():
     if 'username' in session:
         if request.method == 'POST':
             room_name = request.form['new_room']
-            
-            #create a unique .txt file for the room
-            with open(f'rooms/{room_name}.txt', 'x') as f:
-                    f.write('this chat is still empty...\n')
-
-        #create a list of the existing rooms
-        room_files_list= os.listdir('rooms/')
-        #for prettier presentation the.txt suffix is removed:
-        rooms = [x[:-4] for x in room_files_list]
-        return render_template('lobby.html', rooms=rooms)  
+            try:
+                with open(f'rooms/{room_name}.txt', 'x') as f:
+                    f.write('Welcome! \n')
+            except FileNotFoundError:
+                print("The given room name already exists")
+            print("CREATED NEW ROOM NAMED: " + room_name )
+        rooms = os.listdir('rooms/')
+        new_rooms = [x[:-4] for x in rooms]
+        return render_template('lobby.html', rooms=new_rooms)  
     else:
         return redirect('/login')
 
@@ -114,10 +114,10 @@ def update_chat(room):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Append the message to the room's unique .txt file
-        with open(f'rooms/{room}.txt', 'a', newline='') as file:
+        with open(f'rooms/{room}', 'a', newline='') as file:
             file.write(f'[{timestamp}] {username}: {message}\n')
-    #receive the contents of the rooms .txt file        
-    with open(f'rooms/{room}.txt', 'r' ) as file:
+            
+    with open(f'rooms/{room}', 'r' ) as file:
         file.seek(0)
         messages = file.read()
     
