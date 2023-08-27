@@ -12,8 +12,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 
 # Retrieve the room files path from environment variable
-#room_files_path = os.getenv('ROOM_FILES_PATH')
-room_files_path = "rooms/"
+room_files_path = os.getenv('ROOM_FILES_PATH')
+#room_files_path = "rooms/"
 print(room_files_path)
 
 
@@ -123,7 +123,8 @@ def update_chat(room):
         messages = file.read()
     
     
-    return [session['username'],messages.split('\n')]
+    #return [session['username'],messages.split('\n')]
+    return str([session['username'], str(messages.split('\n'))])
 
 
 if __name__ == '__main__':

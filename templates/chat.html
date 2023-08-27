@@ -33,22 +33,23 @@
         blog.append(sender,msg,time);
         return blog;
       }
+
+      
       function updateChat() {
-
-$.get(room(), function(data) {
-  [username,messages] = data;
-  var chatbox = $("#chatbox");
-  chatbox.empty();
-  messages.forEach(function(message) {
-    chatbox.append(createHTMLElements(message,username));
-  });
-
-window.setTimeout(updateChat, 1500);
-})
-    
-
-}
-
+        $.get(room(), function(data) {
+          [_username, _messages]=data.split(', "')
+          username = _username.substring(2,_username.length-1)
+          messages = _messages.split("', '");
+          messages.pop();
+          
+          var chatbox = $("#chatbox");
+          chatbox.empty();
+          messages.forEach(function(message) {
+            chatbox.append(createHTMLElements(message,username));
+          });
+          window.setTimeout(updateChat, 1500);
+        })
+      }
       function sendmessage() {
         $.post(room(), $("#inform").serialize() );
       }
