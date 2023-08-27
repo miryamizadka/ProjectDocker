@@ -4,54 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
-    <link rel="stylesheet" href="../static/login.css">
+    <link rel="stylesheet" href="../static/chat.css">
 </head>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+
+
+
       function room() {
         var room = window.location.href.substring(window.location.href.lastIndexOf("/")+1);
         if (room=="") room = "general";
         return "/api/chat/"+room;
       }
-
-  function updateChat() {
-
-    $.get(room(), function(data) {
-      var chatbox = $("#chatbox");
-      chatbox.empty();
-
-      data.forEach(function(message) {
-        var div = $("<div></div>").text(message).addClass("chat__message chat__message_B");
-        chatbox.append(div);
-      });
-      window.setTimeout(updateChat, 1500);
-     })
-    
-
-}
-
-      function sendmessage() {
-        $.post(room(), $("#inform").serialize() );
+      
+      function createHTMLElements(message,username){
+        if(message=='')
+          return $("<div></div>");
+        [hour,_msg] = message.split(']');
+        [msg_sender,msg_text] = _msg.split(':')
+        var blog = $("<div></div>").addClass("blog")
+        var sender = $("<h6></h6>").text(msg_sender).addClass("sender_txt")
+        var time = $("<p></p>").text(hour.split(' ')[1]).addClass('time')
+        var msg = $("<div></div>").text(msg_text).addClass("chat__message");
+        if(_msg.split(':')[0] == ' ' + username)
+          msg.addClass('myMsg');
+        else{
+          msg.addClass('otherMsg')
+          blog.addClass('otherBlog')
+        }
+        blog.append(sender,msg,time);
+        return blog;
       }
+
+      function updateChat() {
+
+        $.get(room(), function(data) {
+          [username,messages] = data;
+          var chatbox = $("#chatbox");
+          chatbox.empty();
+          messages.forEach(function(message) {
+            chatbox.append(createHTMLElements(message,username));
+          });
+
+      window.setTimeout(updateChat, 1500);
+      })
+    }
+
+    function sendmessage() {
+      $.post(room(), $("#inform").serialize() );
+    }
   
-      $(document).ready(function() {
-        $("#chatbox").text("Loading chat...");
-        $("#sendBtn").click(sendmessage)
-        window.setTimeout(updateChat, 1500);
-      });
+    $(document).ready(function() {
+      $("#chatbox").text("Loading chat...");
+      $("#sendBtn").click(sendmessage)
+      window.setTimeout(updateChat, 1500);
+    });
   
-    </script>
+  </script>
 
 
     <body>
+      <h1 class="_form-title">Chat Room: {{ room }}</h1>
 
-      <form id="inform" action="/api/chat" method="POST" class="chat_msg _form-area">
-        
-        <h1 class="_form-title">Chat Room: {{ room }}</h1>
+      <form id="inform" action="/api/chat" method="POST" class="form_area">
+            
 
         <div class="user-box">
-          <input type="text"  name="msg" placeholder="Message" class="user-box"><br>
+          <input type="text"  name="msg" placeholder="Message" class="user-box">
         </div>
 
         <div class="user-box">
@@ -60,22 +80,26 @@
 
 
       </form>
+      
+      <div class="wrapper">
+        <div class="chat">
+          <div id="chatbox" class="chat-container">
 
-
-      <section class="chat">
-        <div id="chatbox" class="chat__inner">
-
+          </div>
         </div>
-      </section>
-
-
-      <div class="user-box">
-        <a href="/logout" class="logout">logout</a>
       </div>
 
-      <div class="user-box">
-        <a href="/lobby" class="logout">Back to lobby</a>
-      </div>
+      <footer>
+
+        <div class="user-box">
+          <a href="/logout" class="logout">logout</a>
+        </div>
+
+        <div class="user-box">
+          <a href="/lobby" class="logout">Back to lobby</a>
+        </div>
+
+     </footer>
 
     </body>
   </html>

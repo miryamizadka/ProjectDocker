@@ -18,7 +18,7 @@ COPY . .
 EXPOSE 5000
 ENV room_files_path = "rooms/"
 # Set the environment variable for room files path
-#ENV ROOM_FILES_PATH /app/room_files
+ENV ROOM_FILES_PATH /app/room_files
 
 # Create the room_files directory
 RUN mkdir room_files

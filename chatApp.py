@@ -22,7 +22,7 @@ def encode_password(password):
     encoded_bytes = base64.b64encode(password.encode('utf-8'))
     return encoded_bytes.decode('utf-8')
 
-
+ 
 def decode_password(encoded_password):
     decoded_bytes = base64.b64decode(encoded_password.encode('utf-8'))
     return decoded_bytes.decode('utf-8')
@@ -88,7 +88,7 @@ def lobby():
             room_name = request.form['new_room']
             try:
                 with open(f'{room_files_path}{room_name}.txt', 'x') as f:
-                    f.write('Welcome! \n')
+                    f.write('')
             except FileNotFoundError:
                 print("The given room name already exists")
             print("CREATED NEW ROOM NAMED: " + room_name )
@@ -124,7 +124,7 @@ def update_chat(room):
         messages = file.read()
     
     
-    return messages.split('\n')
+    return [session['username'],messages.split('\n')]
 
 
 if __name__ == '__main__':
