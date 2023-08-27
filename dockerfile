@@ -16,12 +16,14 @@ COPY . .
 
 # Expose the port on which the Flask app will run
 EXPOSE 5000
-ENV room_files_path = "rooms/"
+ENV ROOM_FILES_PATH "rooms/"
+
+ENV FLASK_ENV development
+
 # Set the environment variable for room files path
 ENV ROOM_FILES_PATH /app/room_files
 
 # Create the room_files directory
-RUN mkdir room_files
 
 # Run the Flask app
-CMD ["python", "chatApp.py"]
+CMD ["python", "./chatApp.py"]

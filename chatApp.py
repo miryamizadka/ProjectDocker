@@ -12,7 +12,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 
 # Retrieve the room files path from environment variable
-#room_files_path = os.getenv('room_files_path')
+#room_files_path = os.getenv('ROOM_FILES_PATH')
 room_files_path = "rooms/"
 print(room_files_path)
 
@@ -117,8 +117,7 @@ def update_chat(room):
 
         # Append the message to the room's unique .txt file
         with open(f'{room_files_path}{room}.txt', 'a', newline='') as file:
-            file.write(f'[{timestamp}] {username}: {message}\n')
-            
+            file.write(f'[{timestamp}] {username}: {message}\n')           
     with open(f'{room_files_path}{room}.txt', 'r' ) as file:
         file.seek(0)
         messages = file.read()
