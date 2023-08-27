@@ -6,7 +6,6 @@
     <title>Chat App</title>
     <link rel="stylesheet" href="../static/login.css">
 </head>
-
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
       function room() {
@@ -14,23 +13,14 @@
         if (room=="") room = "general";
         return "/api/chat/"+room;
       }
-
-  function updateChat() {
-
-    $.get(room(), function(data) {
-      var chatbox = $("#chatbox");
-      chatbox.empty();
-
-      data.forEach(function(message) {
-        var div = $("<div></div>").text(message).addClass("chat__message chat__message_B");
-        chatbox.append(div);
-      });
-      window.setTimeout(updateChat, 1500);
-     })
-    
-
-}
-
+  
+      function updateChat() {
+        $.get(room(), function(data) {
+          $("#chatbox").text(data);
+          window.setTimeout(updateChat, 1500);
+        })
+      }
+  
       function sendmessage() {
         $.post(room(), $("#inform").serialize() );
       }
@@ -42,8 +32,6 @@
       });
   
     </script>
-
-
     <body>
 
       <form id="inform" action="/api/chat" method="POST" class="chat_msg _form-area">
@@ -58,16 +46,13 @@
           <input id="sendBtn" type="button"  value="send" >
         </div>
 
-
       </form>
-
 
       <section class="chat">
         <div id="chatbox" class="chat__inner">
 
         </div>
       </section>
-
 
       <div class="user-box">
         <a href="/logout" class="logout">logout</a>
@@ -78,4 +63,5 @@
       </div>
 
     </body>
+
   </html>
