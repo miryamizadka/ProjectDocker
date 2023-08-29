@@ -1,5 +1,5 @@
 # Use a base Python image
-FROM python:latest 
+FROM python:3.9 
 
 # Install the required packages
 RUN update-ca-certificates && pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
