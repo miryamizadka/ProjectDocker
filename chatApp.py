@@ -13,6 +13,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 # Retrieve the room files path from environment variable
 room_files_path = os.getenv('ROOM_FILES_PATH')
+users_path = os.getenv('USERS_PATH')
 #room_files_path = "rooms/"
 print(room_files_path)
 
@@ -29,7 +30,7 @@ def decode_password(encoded_password):
 
 
 def check_user_credentials(username, password):
-    with open('users.csv', 'r', newline='') as file:
+    with open(users_path, 'r', newline='') as file:
         reader = csv.reader(file)
         for row in reader:
             if row[0] == username and decode_password(row[1]) == password:
@@ -53,7 +54,7 @@ def register():
         encoded_password = encode_password(password)
         
         # Save user details to the CSV file
-        with open('users.csv', 'a', newline='') as file:
+        with open(users_path, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([username, encoded_password])
         
