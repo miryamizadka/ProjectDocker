@@ -1,12 +1,13 @@
 # Use a base Python image
 FROM python:latest-slim AS base
 
-RUN update-ca-certificates && pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
+RUN update-ca-certificates  
+RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
 
 #VOLUME [ "/users.csv" ]
 
-# Monitoring the status every 5s
-HEALTHCHECK --interval=5s CMD ping -c 1 http://localhost:5000
+# Monitoring the health check
+HEALTHCHECK --interval=10s --timeout=3s CMD curl --fail http://localhost:5000/health || exit 1
 
 # Set the working directory in the container
 WORKDIR /app

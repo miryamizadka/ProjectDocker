@@ -4,9 +4,6 @@ FROM python:3.9
 # Install the required packages
 RUN update-ca-certificates  
 
-# Monitoring the status every 5s
-HEALTHCHECK --interval=5s CMD ping -c 1 http://localhost:5000/health
-
 # Set the working directory in the container
 WORKDIR /app
 

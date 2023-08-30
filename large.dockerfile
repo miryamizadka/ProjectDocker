@@ -4,9 +4,6 @@ FROM python:latest
 # Install the required packages
 RUN update-ca-certificates && pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
 
-# Monitoring the status every 5s
-HEALTHCHECK --interval=5s CMD ping -c 1 http://localhost:5000
-
 # Set the working directory in the container
 WORKDIR /app
 

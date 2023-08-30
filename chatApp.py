@@ -94,6 +94,9 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/health')
+def health():
+    return "ok,200"
 
 
 @app.route('/logout')

@@ -1,3 +1,4 @@
 large.dockerfile
 mid.dockerfile
-thin.dockerfile
+dockerfile
+./automaticCleanup.sh
