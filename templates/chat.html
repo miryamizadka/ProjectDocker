@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../static/chat.css">
 </head>
 
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
       function room() {
@@ -34,6 +35,7 @@
         return blog;
       }
 
+
       
       function updateChat() {
         $.get(room(), function(data) {
@@ -51,31 +53,54 @@
         })
       }
       function sendmessage() {
+        $.post(room(), $("#inform").serialize(),);
+      }
+      function clearmessages() {
         $.post(room(), $("#inform").serialize() );
       }
+
+
+      function clearChat() {
+        $.post(room() + "?clear=true", function(data) {
+      // Handle the response if needed
+      // For example, you can update the chatbox with a message like "Chat cleared."
+      })}
   
     $(document).ready(function() {
       $("#chatbox").text("Loading chat...");
       $("#sendBtn").click(sendmessage)
+      // $("#clear_btn").click(clearChat)
       window.setTimeout(updateChat, 1500);
     });
   
     </script>
 
 
+
+
     <body>
       <h1 class="_form-title">Chat Room: {{ room }}</h1>
+
 
       <form id="inform" action="/api/chat" method="POST" class="form_area">
             
 
-        <div class="user-box">
-          <input type="text"  name="msg" placeholder="Message" class="user-box">
-        </div>
 
         <div class="user-box">
-          <input id="sendBtn" type="button"  value="send" >
+          <input  name="msg" type="text"  placeholder="Message" class="user-box">
         </div>
+
+
+        <div class="user-box">
+          <input name="send_btn" id="sendBtn" type="button"  value="send" >
+        </div>
+
+
+        <div class="user-box" >
+          <input id="clearBtn" type="button" value="Clear" onclick="clearChat()">
+        </div>
+
+
 
 
       </form>
@@ -84,29 +109,34 @@
         <div class="chat">
           <div id="chatbox" class="chat-container">
 
+
           </div>
         </div>
       </div>
 
+
     </div>
+
 
       <footer>
         <div class="user-box">
           <a href="/logout" class="logout">logout</a>
         </div>
 
+
         <div class="user-box">
           <a href="/lobby" class="logout">Back to lobby</a>
         </div>
 
-        <div class="user-box">
-          <button>
-            clear
-          </button>
-        </div>
+
+
+
+
 
      </footer>
 
+
     </body>
+
 
   </html>
