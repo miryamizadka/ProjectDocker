@@ -18,6 +18,8 @@ users_path = os.getenv('USERS_PATH')
 print(room_files_path)
 
 
+    
+
 # Helper functions for user authentication
 def encode_password(password):
     encoded_bytes = base64.b64encode(password.encode('utf-8'))
@@ -81,6 +83,10 @@ def logout():
     session.pop('username', None)
     return redirect('/login')
 
+@app.route('/health')
+def health():
+    return redirect('/register')
+
 
 @app.route('/lobby', methods=['GET', 'POST'])
 def lobby():
@@ -107,6 +113,24 @@ def chat(room):
     else:
         return redirect('/login')
 
+
+# def delete_room_content(room_name):
+#     with open(f'{room_files_path}{room_name}.txt', 'a', newline='') as file:
+#         file.seek(0)
+#         file.truncate()
+#         file.close() 
+        
+# def delete_user_msg(room_name,username):
+#     inputFile = f'{room_files_path}{room_name}.txt'
+#     with open(inputFile, 'r') as filedata:
+#         inputFilelines = filedata.readlines()
+#         with open(inputFile, 'w') as filedata:
+#             for textline in inputFilelines:
+#                 [hour,msg] = textline.split(']')
+#                 [msg_sender,msg_text] = msg.split(':')
+#                 if msg_sender.split(':')[0] != ' ' + username:
+#                     filedata.write(textline)
+#         filedata.close()  
 
 @app.route('/api/chat/<room>', methods=['GET','POST'])
 def update_chat(room):
