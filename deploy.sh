@@ -16,7 +16,7 @@ read -p "Enter commit hash: " commit_hash
 git tag "$version" "$commit_hash" || handle_error "Failed to tag the commit"
 
 # Build the image
-docker build -t chat-app:$version . || handle_error "Failed to build the image"
+docker build -t chat-app:$version . -f thin.dockerfile || handle_error "Failed to build the image"
 
 #push the tag to github repository
 git push origin "$version" || handle_error "failed to push to github"
