@@ -2,7 +2,7 @@
 FROM python:3.9 
 
 # Install the required packages
-RUN update-ca-certificates && pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
+RUN update-ca-certificates  
 
 # Monitoring the status every 5s
 HEALTHCHECK --interval=5s CMD ping -c 1 http://localhost:5000
@@ -12,6 +12,8 @@ WORKDIR /app
 
 # Copy all the directory into the container (except of the .dockerignor files)
 COPY . .
+
+RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
 
 # Expose the port on which the Flask app will run
 EXPOSE 5000
