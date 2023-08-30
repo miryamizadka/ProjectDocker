@@ -132,11 +132,18 @@ def chat(room):
         return redirect('/login')
 
 
-def delete_room_content(room_name):
-    with open(f'{room_files_path}{room_name}.txt', 'a', newline='') as file:
-        file.seek(0)
-        file.truncate()
-        file.close()
+def delete_user_msg(room_name,username):
+    inputFile = f'{room_files_path}{room_name}.txt'
+    with open(inputFile, 'r') as filedata:
+        inputFilelines = filedata.readlines()
+        with open(inputFile, 'w') as filedata:
+            for textline in inputFilelines:
+                [hour,msg] = textline.split(']')
+                [msg_sender,msg_text] = msg.split(':')
+                if msg_sender.split(':')[0] != ' ' + username:
+                    filedata.write(textline)
+        filedata.close()  
+
        
 
 
@@ -149,7 +156,7 @@ def update_chat(room):
 
 
         if request.args.get('clear'):
-            delete_room_content(room)
+            delete_user_msg(room,username)
         else:
             message = request.form['msg']
 
