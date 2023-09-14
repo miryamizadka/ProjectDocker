@@ -17,11 +17,12 @@ RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r
 FROM python:3.9-slim
 
 
+# Copy your application code
+COPY . .
+
 # Set the working directory in the production stage
 WORKDIR /app
 
-# Copy your application code
-COPY . .
 
 # Expose the port on which the Flask app will run
 EXPOSE 5000
