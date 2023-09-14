@@ -1,30 +1,35 @@
-# Use a base Python image
-FROM python:latest-slim AS base
+# ---------------------   Stage 1: Build Dependencies -----------------------------
 
-RUN update-ca-certificates && pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
+FROM python:3.9-slim AS builder
 
-#VOLUME [ "/users.csv" ]
+# Set the working directory in the builder stage
+WORKDIR /build
 
-# Monitoring the health check
-HEALTHCHECK --interval=10s --timeout=3s CMD curl --fail http://localhost:5000/health || exit 1
+# Copy only the requirements file initially (for caching)
+COPY requirements.txt .
 
-# Set the working directory in the container
+# Install Python packages into a virtual environment
+RUN update-ca-certificates  
+RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
+
+
+#------------------------  Stage 2: Production Image  -------------------------------
+FROM python:3.9-slim
+
+
+# Set the working directory in the production stage
 WORKDIR /app
+
+# Copy your application code
+COPY . .
 
 # Expose the port on which the Flask app will run
 EXPOSE 5000
 
-FROM python:latest-slim AS env
-
-# Set the environment variable for room files path
+# Set environment variables (if any)
 ENV ROOM_FILES_PATH "rooms/"
 ENV USERS_PATH "users.csv"
-ENV FLASK_ENV development
-
-# copy all the directory into the container (except of the .dockerignor files)
-COPY . . 
-
-FROM python:latest-slim AS final
+ENV FLASK_ENV production
 
 # Run the Flask app
 CMD ["python", "./chatApp.py"]
