@@ -1,5 +1,5 @@
 # Use a base Python image
-FROM python:3.9-slim
+FROM python:3.9 
 
 # Install the required packages
 RUN update-ca-certificates  
@@ -12,7 +12,7 @@ COPY . .
 
 RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt --no-cache-dir
 
-# Expose the port on which the Flask app will run
+# Expose the port on which the Flask app will runz
 EXPOSE 5000
 
 ENV ROOM_FILES_PATH "rooms/"
